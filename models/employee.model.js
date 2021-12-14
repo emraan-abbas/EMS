@@ -5,8 +5,6 @@ const EmployeeSchema = mongoose.Schema(
 	{
 		email: String,
 		password: String,
-		phone: Number,
-		name: String,
 	},
 	{
 		timestamps: true,
