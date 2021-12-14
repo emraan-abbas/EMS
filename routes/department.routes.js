@@ -5,7 +5,7 @@ const department = require('../controllers/department.controller');
 const check = require('../middleware/check.middleware');
 const { authRole } = require('../middleware/roleCheck.middleware');
 
-router.post('/', check, department.create);
-router.get('/', authRole(['admin']), department.findAll);
+router.post('/', check, authRole(['admin']), department.create);
+router.get('/', check, authRole(['admin']), department.findAll);
 
 module.exports = router;
