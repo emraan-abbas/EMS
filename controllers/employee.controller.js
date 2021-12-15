@@ -1,9 +1,19 @@
 const Employee = require('../models/employee.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { authSchema } = require('../validations/employee.validate');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
+	// JOI STARTS HERE
+	const { error, value } = authSchema.validate(req.body); //JOI here validating
+	if (error) {
+		return res.json({
+			message: error.message,
+		});
+	}
+	// JOI ENDS HERE
+
 	Employee.find({ email: req.body.email })
 		.exec()
 		.then((user) => {
@@ -45,6 +55,15 @@ exports.signUp = async (req, res) => {
 
 //Employee Log In
 exports.logIn = async (req, res) => {
+	// JOI STARTS HERE
+	const { error, value } = authSchema.validate(req.body); //JOI here validating
+	if (error) {
+		return res.json({
+			message: error.message,
+		});
+	}
+	// JOI ENDS HERE
+
 	Employee.find({ email: req.body.email })
 		.exec()
 		.then((employee) => {
