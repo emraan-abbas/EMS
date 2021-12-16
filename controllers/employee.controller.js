@@ -1,7 +1,9 @@
 const Employee = require('../models/employee.model');
+const Department = require('../models/department.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { authSchema } = require('../validations/employee.validate');
+const mongoose = require('mongoose');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
@@ -118,51 +120,85 @@ exports.create = async (req, res) => {
 		});
 	}
 
-	try {
-		const obj = req.body;
-		const employee = await Employee.create(obj);
-		res.send(employee);
-	} catch (error) {
-		res.status(500).send({
-			message: error.message || 'Error at creating Employee !',
+	const employee = new Employee({
+		_id: mongoose.Types.ObjectId(),
+		email: req.body.email,
+		password: req.body.password,
+		name: req.body.name,
+		phone: req.body.phone,
+		department: req.body.department,
+	});
+	employee
+		.save()
+		// .select('_id email password name phone department')
+		.then((result) => {
+			res.status(201).json(result);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json({
+				error: err,
+			});
 		});
-	}
 }; // Create Ends Here
 
 /* ---------- */
 
 // Getting All Employees
 exports.findAll = async (req, res) => {
-	try {
-		await Employee.find().then((employee) => {
+	Employee.find()
+		.select('_id email password department')
+		.populate('department', '_id name description')
+		.exec()
+		.then((data) => {
 			res.status(200).json({
-				status: true,
-				data: employee,
+				count: data.length,
+				employee: data,
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({
+				error: err,
 			});
 		});
-	} catch (error) {
-		res.status(500).send({
-			message: error.message || 'Error at Getting All Employee !',
-		});
-	}
 }; // Getting All Ends Here
 
 /* ---------- */
 
 // Getting a Single Employee
-exports.findOne = async (req, res) => {
+exports.findOne = (req, res) => {
+	// if no employee
 	try {
-		await Employee.findById({ id: req.params._id }).then((employee) => {
-			if (!employee) {
-				return res.status(404).send({
-					message: 'Employee not found with ID: ' + req.params._id,
-				});
-			}
-			res.send(employee);
-		});
+		Employee.findById({ _id: req.params.id })
+			.select('_id email password name phone department')
+			.then((employee) => {
+				if (!employee) {
+					return res.status(404).send({
+						message: 'Employee not found with ID: ' + req.params.id,
+					});
+				}
+				res.send(employee);
+			});
 	} catch (error) {
 		res.status(500).send({
 			message: error.message || 'Error at Getting a Employee !',
 		});
 	}
 }; // Getting a Single Ends Here
+
+// Delete Here
+exports.delete = async (req, res) => {
+	Employee.remove({ _id: req.params.id })
+		.exec()
+		.then((employee) => {
+			res.status(200).json({
+				employee: employee,
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({
+				error: err,
+				message: 'ERROR HAI IDR',
+			});
+		});
+}; // Delete Ends Here
