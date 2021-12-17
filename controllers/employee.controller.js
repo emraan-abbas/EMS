@@ -1,14 +1,13 @@
 const Employee = require('../models/employee.model');
-const Department = require('../models/department.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { authSchema } = require('../validations/employee.validate');
+const { authSignUp, authLogin } = require('../validations/employee.validate');
 const mongoose = require('mongoose');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
 	// JOI STARTS HERE
-	const { error, value } = authSchema.validate(req.body); //JOI here validating
+	const { error, value } = authSignUp.validate(req.body); //JOI here validating
 	if (error) {
 		return res.json({
 			message: error.message,
@@ -23,6 +22,12 @@ exports.signUp = async (req, res) => {
 				return res.status(409).json({
 					message: 'Email Already Exist !',
 				});
+			}
+			// Validating Employee
+			if (!req.body) {
+				return res.status(400).send({
+					message: 'Please Enter Some Data',
+				});
 			} else {
 				bcrypt.hash(req.body.password, 10, (err, hash) => {
 					if (err) {
@@ -30,17 +35,21 @@ exports.signUp = async (req, res) => {
 							error: err,
 						});
 					} else {
+						// Added Block -- Replaced
 						const employee = new Employee({
+							_id: mongoose.Types.ObjectId(),
 							email: req.body.email,
 							password: hash,
+							name: req.body.name,
+							phone: req.body.phone,
+							department: req.body.department,
+							role: req.body.role,
 						});
 						employee
 							.save()
+							// .select('_id email password name phone department')
 							.then((result) => {
-								console.log(result);
-								res.status(201).json({
-									message: 'User Created',
-								});
+								res.status(201).json(result);
 							})
 							.catch((err) => {
 								console.log(err);
@@ -48,6 +57,7 @@ exports.signUp = async (req, res) => {
 									error: err,
 								});
 							});
+						// Added Block -- Replaced
 					}
 				});
 			}
@@ -58,7 +68,7 @@ exports.signUp = async (req, res) => {
 //Employee Log In
 exports.logIn = async (req, res) => {
 	// JOI STARTS HERE
-	const { error, value } = authSchema.validate(req.body); //JOI here validating
+	const { error, value } = authLogin.validate(req.body); //JOI here validating
 	if (error) {
 		return res.json({
 			message: error.message,
@@ -127,6 +137,7 @@ exports.create = async (req, res) => {
 		name: req.body.name,
 		phone: req.body.phone,
 		department: req.body.department,
+		role: req.body.role,
 	});
 	employee
 		.save()
@@ -147,8 +158,8 @@ exports.create = async (req, res) => {
 // Getting All Employees
 exports.findAll = async (req, res) => {
 	Employee.find()
-		.select('_id email password department')
-		.populate('department', '_id name description')
+		.select('_id email password name phone department role')
+		.populate('department role', '_id name description role')
 		.exec()
 		.then((data) => {
 			res.status(200).json({
@@ -202,3 +213,28 @@ exports.delete = async (req, res) => {
 			});
 		});
 }; // Delete Ends Here
+
+// --------------------------------------------------------------------------------------//
+// ELSE BLOCK Replaced in SIGN UP CONTROLLER
+/*
+ 
+const employee = new Employee({
+	email: req.body.email,
+	password: hash,
+});
+employee
+	.save()
+	.then((result) => {
+		console.log(result);
+		res.status(201).json({
+			message: 'User Created',
+		});
+	})
+	.catch((err) => {
+		console.log(err);
+		res.status(500).json({
+			error: err,
+		});
+	}); 
+	
+	*/

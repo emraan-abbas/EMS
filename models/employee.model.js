@@ -8,6 +8,7 @@ const EmployeeSchema = mongoose.Schema(
 		name: String,
 		phone: String,
 		department: { type: mongoose.Types.ObjectId, ref: 'departments' },
+		role: { type: mongoose.Types.ObjectId, ref: 'roles' },
 	},
 	{
 		timestamps: true,

@@ -1,9 +1,19 @@
 const Joi = require('joi');
 
-const authSchema = Joi.object({
-	// name: Joi.string().uppercase().lowercase().required(),
+const authSignUp = Joi.object({
+	// _id: mongoose.Types.ObjectId(),
+	email: Joi.string().email().lowercase().required(),
+	password: Joi.string().min(6).required(),
+	name: Joi.string().required(),
+	phone: Joi.string().required(),
+	department: Joi.string().required(),
+	role: Joi.string().required(),
+});
+
+const authLogin = Joi.object({
+	// _id: mongoose.Types.ObjectId(),
 	email: Joi.string().email().lowercase().required(),
 	password: Joi.string().min(6).required(),
 });
 
-module.exports = { authSchema };
+module.exports = { authSignUp, authLogin };
