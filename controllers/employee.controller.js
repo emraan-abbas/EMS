@@ -94,6 +94,7 @@ exports.logIn = async (req, res) => {
 					const token = jwt.sign(
 						{
 							email: employee[0].email,
+							role: req.body.role, // Adding Role to TOKEN
 						},
 						process.env.JWT_KEY,
 						{

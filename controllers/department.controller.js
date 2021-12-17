@@ -23,12 +23,14 @@ exports.create = async (req, res) => {
 // Getting All Employees
 exports.findAll = async (req, res) => {
 	try {
-		await Department.find().then((department) => {
-			res.status(200).json({
-				status: true,
-				data: department,
+		await Department.find()
+			// .populate('employees', '_id name description role')
+			.then((department) => {
+				res.status(200).json({
+					status: true,
+					data: department,
+				});
 			});
-		});
 	} catch (error) {
 		res.status(500).send({
 			message: error.message || 'Error at Getting All Employee !',

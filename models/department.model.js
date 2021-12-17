@@ -5,6 +5,7 @@ const DepartmentSchema = mongoose.Schema(
 	{
 		name: String,
 		description: String,
+		employee: { type: mongoose.Types.ObjectId, ref: 'employees' },
 	},
 	{
 		timestamps: true,

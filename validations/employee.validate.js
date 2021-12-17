@@ -14,6 +14,7 @@ const authLogin = Joi.object({
 	// _id: mongoose.Types.ObjectId(),
 	email: Joi.string().email().lowercase().required(),
 	password: Joi.string().min(6).required(),
+	role: Joi.string(),
 });
 
 module.exports = { authSignUp, authLogin };
