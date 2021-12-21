@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { authSignUp, authLogin } = require('../validations/employee.validate');
 const mongoose = require('mongoose');
 const req = require('express/lib/request');
+const res = require('express/lib/response');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
@@ -251,10 +252,25 @@ exports.update = async (req, res) => {
 // Update Ends Here
 
 // Update Password
-exports.updatePass = async (req, res) => {};
+exports.updatePass = async (req, res) => {
+	try {
+		const { employeeData } = req;
+		const employee = await Employee.findOne({ email: employeeData.email });
+		const found = await bcrypt.compare(req.body.oldPassword, employee.password);
+		if (found) {
+			const newHash = await bcrypt.hash(req.body.newPassword, 10);
+			employee.password = newHash;
+			await employee.save();
+			res.status(200).json({ message: 'Password Update Successfully !' });
+		} else {
+			return res.status(401).json({
+				message: 'Error at Updating Password !' || error,
+			});
+		}
+	} catch (error) {
+		return res.status(401).json({
+			message: 'Error at Updating Passwordddd !' || error,
+		});
+	}
+};
 // Update Ends Here
-
-// async function extract() {
-// 	let employee = await Employee.find({ email: req.body.email });
-// 	let value = await Role.finddById({ _id: employee[0].role });
-// }
