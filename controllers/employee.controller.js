@@ -1,8 +1,10 @@
 const Employee = require('../models/employee.model');
+const Role = require('../models/role.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { authSignUp, authLogin } = require('../validations/employee.validate');
 const mongoose = require('mongoose');
+const req = require('express/lib/request');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
@@ -90,25 +92,35 @@ exports.logIn = async (req, res) => {
 						message: 'Login Failed',
 					});
 				}
-				if (result) {
-					const token = jwt.sign(
-						{
-							email: employee[0].email,
-							role: req.body.role, // Adding Role to TOKEN
-						},
-						process.env.JWT_KEY,
-						{
-							expiresIn: '1h',
+
+				// Getting Role through Email
+				Employee.find({ email: req.body.email }).then((employee) => {
+					Role.findById({ _id: employee[0].role }).then((val) => {
+						console.log(val.name);
+						//
+						if (result) {
+							const token = jwt.sign(
+								{
+									email: employee[0].email,
+									role: val.name,
+								},
+								process.env.JWT_KEY,
+								{
+									expiresIn: '1h',
+								}
+							);
+							return res.status(200).json({
+								message: 'Login Sucessful !',
+								token: token,
+							});
 						}
-					);
-					return res.status(200).json({
-						message: 'Login Sucessful !',
-						token: token,
+						return res.status(401).json({
+							message: 'Auth Failed',
+						});
+						//
 					});
-				}
-				return res.status(401).json({
-					message: 'Auth Failed',
 				});
+				// Getting Role through Email - Ends Here
 			});
 		})
 		.catch((err) => {
@@ -226,7 +238,6 @@ exports.update = async (req, res) => {
 		{
 			$set: {
 				email: req.body.email,
-				password: req.body.password,
 				name: req.body.name,
 				phone: req.body.phone,
 				department: req.body.department,
@@ -238,3 +249,12 @@ exports.update = async (req, res) => {
 	});
 };
 // Update Ends Here
+
+// Update Password
+exports.updatePass = async (req, res) => {};
+// Update Ends Here
+
+// async function extract() {
+// 	let employee = await Employee.find({ email: req.body.email });
+// 	let value = await Role.finddById({ _id: employee[0].role });
+// }

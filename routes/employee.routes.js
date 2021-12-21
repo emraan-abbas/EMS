@@ -12,5 +12,6 @@ router.get('/', check, employee.findAll);
 router.get('/:id', check, authRole(['admin']), employee.findOne);
 router.delete('/:id', check, authRole(['admin']), employee.delete);
 router.put('/:id', employee.update);
+router.patch('/:id', employee.updatePass);
 
 module.exports = router;
