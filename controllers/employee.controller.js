@@ -198,6 +198,8 @@ exports.findOne = (req, res) => {
 	}
 }; // Getting a Single Ends Here
 
+/* ---------- */
+
 // Delete Here
 exports.delete = async (req, res) => {
 	Employee.remove({ _id: req.params.id })
@@ -215,27 +217,24 @@ exports.delete = async (req, res) => {
 		});
 }; // Delete Ends Here
 
-// --------------------------------------------------------------------------------------//
-// ELSE BLOCK Replaced in SIGN UP CONTROLLER
-/*
- 
-const employee = new Employee({
-	email: req.body.email,
-	password: hash,
-});
-employee
-	.save()
-	.then((result) => {
-		console.log(result);
-		res.status(201).json({
-			message: 'User Created',
-		});
-	})
-	.catch((err) => {
-		console.log(err);
-		res.status(500).json({
-			error: err,
-		});
-	}); 
-	
-	*/
+/* ---------- */
+
+// Update Here
+exports.update = async (req, res) => {
+	return Employee.updateOne(
+		{ _id: req.params.id },
+		{
+			$set: {
+				email: req.body.email,
+				password: req.body.password,
+				name: req.body.name,
+				phone: req.body.phone,
+				department: req.body.department,
+				role: req.body.role,
+			},
+		}
+	).then((result) => {
+		res.status(200).json({ message: 'Update Successfully !' });
+	});
+};
+// Update Ends Here
