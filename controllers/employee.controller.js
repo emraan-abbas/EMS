@@ -4,8 +4,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { authSignUp, authLogin } = require('../validations/employee.validate');
 const mongoose = require('mongoose');
-const req = require('express/lib/request');
-const res = require('express/lib/response');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
