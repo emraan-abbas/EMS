@@ -1,5 +1,4 @@
 const Role = require('../models/role.model');
-const bcrypt = require('bcrypt');
 
 // Creating Roles
 exports.create = async (req, res) => {
@@ -9,7 +8,17 @@ exports.create = async (req, res) => {
 			message: 'Please Enter Some Data',
 		});
 	}
-
+	// Checking Existing Role
+	Role.find({ name: req.body.name })
+		.exec()
+		.then((role) => {
+			if (role.length >= 1) {
+				return res.status(409).json({
+					message: 'Role Already Exist !',
+				});
+			}
+		});
+	// Checking Existing Role
 	try {
 		const obj = req.body;
 		const role = await Role.create(obj);
