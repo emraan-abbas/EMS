@@ -104,6 +104,7 @@ exports.logIn = async (req, res) => {
 								{
 									email: employee[0].email,
 									role: val.name,
+									id: employee[0].id,
 								},
 								process.env.JWT_KEY,
 								{
