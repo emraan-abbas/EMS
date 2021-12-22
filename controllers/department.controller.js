@@ -8,14 +8,24 @@ exports.create = async (req, res) => {
 			message: 'Please Enter Some Data',
 		});
 	}
-
 	try {
-		const obj = req.body;
-		const department = await Department.create(obj);
-		res.send(department);
-	} catch (error) {
-		res.status(500).send({
-			message: error.message || 'Error at creating Department !',
+		const found = await Department.findOne({ name: req.body.name });
+		if (found) {
+			res.status(401).json({ message: 'Department ALready Exist !' });
+		} else {
+			try {
+				const obj = req.body;
+				const department = await Department.create(obj);
+				res.send(department);
+			} catch (error) {
+				res.status(500).send({
+					message: error.message || 'Error at creating Department !',
+				});
+			}
+		}
+	} catch (err) {
+		return res.status(200).json({
+			message: 'TRY CATCH BLOCK ERROR (Department) !',
 		});
 	}
 }; // Create Ends Here

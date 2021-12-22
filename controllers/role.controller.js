@@ -10,12 +10,23 @@ exports.create = async (req, res) => {
 	}
 
 	try {
-		const obj = req.body;
-		const role = await Role.create(obj);
-		res.send(role);
-	} catch (error) {
-		res.status(500).send({
-			message: error.message || 'Error at creating Role !',
+		const found = await Role.findOne({ name: req.body.name });
+		if (found) {
+			res.status(401).json({ message: 'Role ALready Exist !' });
+		} else {
+			try {
+				const obj = req.body;
+				const role = await Role.create(obj);
+				res.send(role);
+			} catch (error) {
+				res.status(500).send({
+					message: error.message || 'Error at creating Role !',
+				});
+			}
+		}
+	} catch (err) {
+		return res.status(200).json({
+			message: 'TRY CATCH BLOCK ERROR (Role) !',
 		});
 	}
 }; // Create Ends Here
