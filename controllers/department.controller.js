@@ -8,17 +8,6 @@ exports.create = async (req, res) => {
 			message: 'Please Enter Some Data',
 		});
 	}
-	// Checking Existing Role
-	Department.find({ name: req.body.name })
-		.exec()
-		.then((department) => {
-			if (department.length >= 1) {
-				return res.status(409).json({
-					message: 'Department Already Exist !',
-				});
-			}
-		});
-	// Checking Existing Role
 
 	try {
 		const obj = req.body;

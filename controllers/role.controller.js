@@ -5,20 +5,10 @@ exports.create = async (req, res) => {
 	// Validating Role
 	if (!req.body) {
 		return res.status(400).send({
-			message: 'Please Enter Some Data',
+			message: 'Please Enter Some Data OR Role Already Exist !',
 		});
 	}
-	// Checking Existing Role
-	Role.find({ name: req.body.name })
-		.exec()
-		.then((role) => {
-			if (role.length >= 1) {
-				return res.status(409).json({
-					message: 'Role Already Exist !',
-				});
-			}
-		});
-	// Checking Existing Role
+
 	try {
 		const obj = req.body;
 		const role = await Role.create(obj);
