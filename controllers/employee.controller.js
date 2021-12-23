@@ -283,42 +283,50 @@ exports.updatePass = async (req, res) => {
 exports.forgetPass = async (req, res) => {
 	const email = req.body.email; //not part of Node Mailer
 
-	//JWT token for registration
-	const token = jwt.sign({ email }, 'password123', {
-		expiresIn: '30m',
-	});
+	// EMAIL CHECK
+	Employee.findOne({ email }, function (err, data) {
+		if (data) {
+			//JWT token for registration
+			const token = jwt.sign({ email }, 'password123', {
+				expiresIn: '30m',
+			});
+			// NODE MAILER
+			let transporter = nodemailer.createTransport({
+				service: 'gmail',
+				auth: {
+					user: process.env.EMAIL,
+					pass: process.env.PASSWORD,
+				},
+			});
 
-	// NODE MAILER
-	let transporter = nodemailer.createTransport({
-		service: 'gmail',
-		auth: {
-			user: process.env.EMAIL,
-			pass: process.env.PASSWORD,
-		},
-	});
+			let mailOptions = {
+				from: '"Employee Management System" mrbuilder0@gmail.com',
+				to: email,
+				subject: 'Activation Token for your Forgotten Password',
+				html: `
+				<h2> Your Activation Link </h2>
+				<p> token= ${token} </p>
+				`,
+			};
 
-	let mailOptions = {
-		from: '"Employee Management System" mrbuilder0@gmail.com',
-		to: email,
-		subject: 'Activation Token for your Forgotten Password',
-		html: `
-		<h2> Your Activation Link </h2>
-		<p> token= ${token} </p>
-		`,
-	};
-
-	transporter.sendMail(mailOptions, (err, data) => {
-		if (err) {
-			return res.status(401).json({
-				message: 'Error at Nodemailer !' || error,
+			transporter.sendMail(mailOptions, (err, data) => {
+				if (err) {
+					return res.status(401).json({
+						message: 'Error at Nodemailer !' || error,
+					});
+				} else {
+					return res.status(200).json({
+						message: 'Email Sent (Nodemailer) !' || error,
+					});
+				}
 			});
 		} else {
-			return res.status(200).json({
-				message: 'Email Sent (Nodemailer) !' || error,
+			console.log('EMAIL NOT FOUND');
+			return res.status(401).json({
+				message: 'No Such Email Found !' || error,
 			});
 		}
 	});
-	// NODE MAILER ENDS HERE
 };
 // Forget Passowrd Ends Here
 
