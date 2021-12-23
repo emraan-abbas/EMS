@@ -13,5 +13,7 @@ router.get('/:id', check, authRole(['admin']), employee.findOne);
 router.delete('/:id', check, authRole(['admin']), employee.delete);
 router.put('/:id', employee.update);
 router.patch('/:id', check, employee.updatePass);
+router.post('/forget-password', employee.forgetPass);
+router.post('/verify-password', employee.verifyPass);
 
 module.exports = router;
