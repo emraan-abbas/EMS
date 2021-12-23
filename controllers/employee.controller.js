@@ -282,10 +282,9 @@ exports.updatePass = async (req, res) => {
 // Forget Passowrd
 exports.forgetPass = async (req, res) => {
 	const email = req.body.email; //not part of Node Mailer
-	const id = req.body.id;
 
 	//JWT token for registration
-	const token = jwt.sign({ email, id }, 'password123', {
+	const token = jwt.sign({ email }, 'password123', {
 		expiresIn: '30m',
 	});
 
@@ -293,8 +292,8 @@ exports.forgetPass = async (req, res) => {
 	let transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
-			user: 'ENTER EMAIL HERE',
-			pass: 'ENTER PASSWORD HERE',
+			user: process.env.EMAIL,
+			pass: process.env.PASSWORD,
 		},
 	});
 
@@ -329,30 +328,20 @@ exports.forgetPass = async (req, res) => {
 exports.verifyPass = async (req, res) => {
 	const { token } = req.body;
 	if (token) {
-		jwt.verify(token, 'password123', function (err, decodedToken) {
+		jwt.verify(token, 'password123', async function (err, decodedToken) {
 			if (err) {
 				console.log(err);
 				return res.status(400).json({ error: 'Incorrect or Expired Link !' });
 			} else {
-				const { id } = decodedToken;
+				const { email } = decodedToken;
 				//Update Password //
-				const employee = Employee.findById(id, async function (err, res) {
-					try {
-						const newHash = await bcrypt.hash(req.body.password, 10);
-						employee.password = newHash;
-						console.log(employee);
-						// await employee.save();
-						// res.status(200).json({ message: 'New Password Set Successfully !' });
-					} catch (error) {
-						console.log(error);
-					}
-				});
-				// const newHash = bcrypt.hash(req.body.password, 10);
-				// employee.password = newHash;
-				// employee.save();
-
+				const employee = await Employee.findOne({ email });
+				const newHash = await bcrypt.hash(req.body.password, 10);
+				employee.password = newHash;
+				console.log(employee);
+				await employee.save();
+				res.status(200).json({ message: 'New Password Set Successfully !' });
 				//Update Password //
-				return res.status(200).json({ message: 'DONE !' });
 			}
 		});
 	} else {
