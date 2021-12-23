@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { authSignUp, authLogin } = require('../validations/employee.validate');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
 
 // Employee Sign Up
 exports.signUp = async (req, res) => {
@@ -250,6 +251,8 @@ exports.update = async (req, res) => {
 };
 // Update Ends Here
 
+/* ---------- */
+
 // Update Password
 exports.updatePass = async (req, res) => {
 	try {
@@ -273,3 +276,87 @@ exports.updatePass = async (req, res) => {
 	}
 };
 // Update Ends Here
+
+/* ---------- */
+
+// Forget Passowrd
+exports.forgetPass = async (req, res) => {
+	const email = req.body.email; //not part of Node Mailer
+	const id = req.body.id;
+
+	//JWT token for registration
+	const token = jwt.sign({ email, id }, 'password123', {
+		expiresIn: '30m',
+	});
+
+	// NODE MAILER
+	let transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: 'ENTER EMAIL HERE',
+			pass: 'ENTER PASSWORD HERE',
+		},
+	});
+
+	let mailOptions = {
+		from: '"Employee Management System" mrbuilder0@gmail.com',
+		to: email,
+		subject: 'Activation Token for your Forgotten Password',
+		html: `
+		<h2> Your Activation Link </h2>
+		<p> token= ${token} </p>
+		`,
+	};
+
+	transporter.sendMail(mailOptions, (err, data) => {
+		if (err) {
+			return res.status(401).json({
+				message: 'Error at Nodemailer !' || error,
+			});
+		} else {
+			return res.status(200).json({
+				message: 'Email Sent (Nodemailer) !' || error,
+			});
+		}
+	});
+	// NODE MAILER ENDS HERE
+};
+// Forget Passowrd Ends Here
+
+/* ---------- */
+
+// Verify Password
+exports.verifyPass = async (req, res) => {
+	const { token } = req.body;
+	if (token) {
+		jwt.verify(token, 'password123', function (err, decodedToken) {
+			if (err) {
+				console.log(err);
+				return res.status(400).json({ error: 'Incorrect or Expired Link !' });
+			} else {
+				const { id } = decodedToken;
+				//Update Password //
+				const employee = Employee.findById(id, async function (err, res) {
+					try {
+						const newHash = await bcrypt.hash(req.body.password, 10);
+						employee.password = newHash;
+						console.log(employee);
+						// await employee.save();
+						// res.status(200).json({ message: 'New Password Set Successfully !' });
+					} catch (error) {
+						console.log(error);
+					}
+				});
+				// const newHash = bcrypt.hash(req.body.password, 10);
+				// employee.password = newHash;
+				// employee.save();
+
+				//Update Password //
+				return res.status(200).json({ message: 'DONE !' });
+			}
+		});
+	} else {
+		return res.status(400).json({ error: 'Error at Verify Token !' });
+	}
+};
+// Verify Password Ends Here
