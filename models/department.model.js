@@ -3,9 +3,12 @@ const mongoose = require('mongoose');
 
 const DepartmentSchema = mongoose.Schema(
 	{
+		dept_id: mongoose.Types.ObjectId,
+		job_dept: String,
 		name: String,
 		description: String,
-		employee: { type: mongoose.Types.ObjectId, ref: 'employees' },
+		salary_range: String,
+		employee: { type: mongoose.Types.ObjectId, ref: 'employees' }, // OLD ONES
 	},
 	{
 		timestamps: true,
