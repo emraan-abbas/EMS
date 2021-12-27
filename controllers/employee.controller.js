@@ -182,7 +182,7 @@ exports.create = async (req, res) => {
 exports.findAll = async (req, res) => {
 	Employee.find()
 		.select(
-			'_id email password fname lname gender age phone department roll leave qualification payroll'
+			'_id email password fname lname gender age phone department role leave qualification payroll'
 		)
 		.populate('department', '_id name description')
 		.populate('role', '_id name description')
