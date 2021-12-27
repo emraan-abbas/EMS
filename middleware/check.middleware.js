@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 		next();
 	} catch (error) {
 		return res.status(401).json({
-			message: 'Not Authenticated for this route !',
+			message: 'Not Authenticated for this route ! (TOKEN ERR)',
 		});
 	}
 };

@@ -6,7 +6,7 @@ const LeaveSchema = mongoose.Schema(
 		leave_id: mongoose.Types.ObjectId,
 		date: String,
 		reason: String,
-		employee: { type: mongoose.Types.ObjectId, ref: 'employees' },
+		payroll: { type: mongoose.Types.ObjectId, ref: 'payrolls' },
 	},
 	{
 		timestamps: true,

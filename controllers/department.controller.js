@@ -1,4 +1,5 @@
 const Department = require('../models/department.model');
+const mongoose = require('mongoose');
 
 // Creating Department
 exports.create = async (req, res) => {
@@ -8,42 +9,47 @@ exports.create = async (req, res) => {
 			message: 'Please Enter Some Data',
 		});
 	}
-	try {
-		const found = await Department.findOne({ name: req.body.name });
-		if (found) {
-			res.status(401).json({ message: 'Department ALready Exist !' });
-		} else {
-			try {
-				const obj = req.body;
-				const department = await Department.create(obj);
-				res.send(department);
-			} catch (error) {
-				res.status(500).send({
-					message: error.message || 'Error at creating Department !',
-				});
-			}
-		}
-	} catch (err) {
-		return res.status(200).json({
-			message: 'TRY CATCH BLOCK ERROR (Department) !',
+
+	const department = new Department({
+		_id: mongoose.Types.ObjectId(),
+		job_dept: req.body.job_dept,
+		name: req.body.name,
+		description: req.body.description,
+		salary_range: req.body.salary_range,
+		salary: req.body.salary,
+		payroll: req.body.payroll,
+	});
+	department
+		.save()
+		// .select('_id email password name phone department')
+		.then((result) => {
+			res.status(201).json(result);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json({
+				error: err,
+			});
 		});
-	}
 }; // Create Ends Here
 
 // Getting All Employees
 exports.findAll = async (req, res) => {
-	try {
-		await Department.find()
-			// .populate('employees', '_id name description role')
-			.then((department) => {
-				res.status(200).json({
-					status: true,
-					data: department,
-				});
+	Department.find()
+		.select('_id name description salary_range salary payroll')
+		.populate('salary', '_id amount annual bonus')
+		.populate('payroll', '_id date report total_amount')
+
+		.exec()
+		.then((data) => {
+			res.status(200).json({
+				count: data.length,
+				department: data,
 			});
-	} catch (error) {
-		res.status(500).send({
-			message: error.message || 'Error at Getting All Employee !',
+		})
+		.catch((err) => {
+			res.status(500).json({
+				error: err,
+			});
 		});
-	}
 }; // Getting All Ends Here

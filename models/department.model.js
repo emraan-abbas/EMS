@@ -8,7 +8,8 @@ const DepartmentSchema = mongoose.Schema(
 		name: String,
 		description: String,
 		salary_range: String,
-		employee: { type: mongoose.Types.ObjectId, ref: 'employees' }, // OLD ONES
+		salary: { type: mongoose.Types.ObjectId, ref: 'salaries' },
+		payroll: { type: mongoose.Types.ObjectId, ref: 'payrolls' },
 	},
 	{
 		timestamps: true,

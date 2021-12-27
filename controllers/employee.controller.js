@@ -181,8 +181,15 @@ exports.create = async (req, res) => {
 // Getting All Employees
 exports.findAll = async (req, res) => {
 	Employee.find()
-		.select('_id email password fname lname gender age phone department leave qualification')
-		.populate('department role', '_id name description role')
+		.select(
+			'_id email password fname lname gender age phone department roll leave qualification payroll'
+		)
+		.populate('department', '_id name description')
+		.populate('role', '_id name description')
+		.populate('leave', 'date reason')
+		.populate('qualification', 'position requirements date_in')
+		.populate('payroll', 'date report total_amount')
+
 		.exec()
 		.then((data) => {
 			res.status(200).json({
@@ -205,6 +212,11 @@ exports.findOne = (req, res) => {
 	try {
 		Employee.findById({ _id: req.params.id })
 			.select('_id email password fname lname gender age phone department leave qualification')
+			.populate('department', '_id name description')
+			.populate('role', '_id name description')
+			.populate('leave', 'date reason')
+			.populate('qualification', 'position requirements date_in')
+			.populate('payroll', 'date report total_amount')
 			.then((employee) => {
 				if (!employee) {
 					return res.status(404).send({
@@ -255,6 +267,9 @@ exports.update = async (req, res) => {
 				email: req.body.email,
 				department: req.body.department,
 				role: req.body.role,
+				payroll: req.body.payroll,
+				leave: req.body.leave,
+				qualification: req.body.qualification,
 			},
 		}
 	).then((result) => {

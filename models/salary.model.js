@@ -7,7 +7,7 @@ const SalarySchema = mongoose.Schema(
 		amount: String,
 		anual: String,
 		bonus: String,
-		department: { type: mongoose.Types.ObjectId, ref: 'departments' },
+		payroll: { type: mongoose.Types.ObjectId, ref: 'payrolls' },
 	},
 	{
 		timestamps: true,
