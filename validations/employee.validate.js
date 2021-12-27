@@ -8,12 +8,9 @@ const authSignUp = Joi.object({
 	lname: Joi.string().required(),
 	gender: Joi.string().required(),
 	age: Joi.string().required(),
-	payroll: Joi.string().required(),
-	qualification: Joi.string().required(),
 	phone: Joi.string().required(),
 	department: Joi.string().required(),
 	role: Joi.string().required(),
-	leave: Joi.string().required(),
 });
 
 const authLogin = Joi.object({

@@ -49,9 +49,6 @@ exports.signUp = async (req, res) => {
 							password: hash,
 							department: req.body.department,
 							role: req.body.role,
-							payroll: req.body.payroll,
-							leave: req.body.leave,
-							qualification: req.body.qualification,
 						});
 						employee
 							.save()
@@ -113,7 +110,7 @@ exports.logIn = async (req, res) => {
 								},
 								process.env.JWT_KEY,
 								{
-									expiresIn: '1h',
+									expiresIn: '5h',
 								}
 							);
 							return res.status(200).json({
@@ -161,6 +158,7 @@ exports.create = async (req, res) => {
 		payroll: req.body.payroll,
 		leave: req.body.leave,
 		qualification: req.body.qualification,
+		salary: req.body.salary,
 	});
 	employee
 		.save()
@@ -181,14 +179,9 @@ exports.create = async (req, res) => {
 // Getting All Employees
 exports.findAll = async (req, res) => {
 	Employee.find()
-		.select(
-			'_id email password fname lname gender age phone department role leave qualification payroll'
-		)
+		.select('_id email password fname lname gender age phone department role')
 		.populate('department', '_id name description')
 		.populate('role', '_id name description')
-		.populate('leave', 'date reason')
-		.populate('qualification', 'position requirements date_in')
-		.populate('payroll', 'date report total_amount')
 
 		.exec()
 		.then((data) => {
@@ -211,12 +204,9 @@ exports.findOne = (req, res) => {
 	// if no employee
 	try {
 		Employee.findById({ _id: req.params.id })
-			.select('_id email password fname lname gender age phone department leave qualification')
+			.select('_id email password fname lname gender age phone department role')
 			.populate('department', '_id name description')
 			.populate('role', '_id name description')
-			.populate('leave', 'date reason')
-			.populate('qualification', 'position requirements date_in')
-			.populate('payroll', 'date report total_amount')
 			.then((employee) => {
 				if (!employee) {
 					return res.status(404).send({
@@ -267,9 +257,6 @@ exports.update = async (req, res) => {
 				email: req.body.email,
 				department: req.body.department,
 				role: req.body.role,
-				payroll: req.body.payroll,
-				leave: req.body.leave,
-				qualification: req.body.qualification,
 			},
 		}
 	).then((result) => {

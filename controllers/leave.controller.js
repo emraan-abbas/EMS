@@ -14,7 +14,7 @@ exports.create = async (req, res) => {
 		_id: mongoose.Types.ObjectId(),
 		date: req.body.date,
 		reason: req.body.reason,
-		payroll: req.body.payroll,
+		employeeId: req.body.employeeId,
 	});
 	leave
 		.save()
@@ -29,6 +29,8 @@ exports.create = async (req, res) => {
 			});
 		});
 }; // Create Ends Here
+
+/* ---------- */
 
 // Getting All Leaves
 exports.findAll = async (req, res) => {
@@ -49,3 +51,29 @@ exports.findAll = async (req, res) => {
 			});
 		});
 }; // Getting All Ends Here
+
+/* ---------- */
+
+// Getting a Single Leave
+exports.findOne = (req, res) => {
+	// if no Leave
+	try {
+		Leave.findById({ _id: req.params.id })
+			.select('_id date reason employeeId')
+			.populate('employeeId', '_id email fname lname gender age phone department role')
+			.then((leave) => {
+				if (!req.body) {
+					return res.status(404).send({
+						message: 'Write something bro !: ',
+					});
+				}
+				res.send(leave);
+			});
+	} catch (error) {
+		res.status(500).send({
+			message: error.message || 'Error at Getting a Leave !',
+		});
+	}
+}; // Getting a Single Ends Here
+
+/* ---------- */
