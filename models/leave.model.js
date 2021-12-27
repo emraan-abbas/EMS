@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const LeaveSchema = mongoose.Schema(
 	{
-		_id: mongoose.Types.ObjectId,
+		leave_id: mongoose.Types.ObjectId,
 		date: String,
 		reason: String,
 		employee: { type: mongoose.Types.ObjectId, ref: 'employees' },

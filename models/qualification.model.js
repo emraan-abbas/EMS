@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const QualificationSchema = mongoose.Schema(
 	{
-		_id: mongoose.Types.ObjectId,
+		qualification_id: mongoose.Types.ObjectId,
 		position: String,
 		requirements: String,
 		date_in: String,
