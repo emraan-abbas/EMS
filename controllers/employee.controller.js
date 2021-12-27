@@ -40,10 +40,13 @@ exports.signUp = async (req, res) => {
 						// Added Block -- Replaced
 						const employee = new Employee({
 							_id: mongoose.Types.ObjectId(),
+							fname: req.body.fname,
+							lname: req.body.lname,
+							gender: req.body.gender,
+							age: req.body.age,
+							phone: req.body.phone,
 							email: req.body.email,
 							password: hash,
-							name: req.body.name,
-							phone: req.body.phone,
 							department: req.body.department,
 							role: req.body.role,
 						});
@@ -238,9 +241,12 @@ exports.update = async (req, res) => {
 		{ _id: req.params.id },
 		{
 			$set: {
-				email: req.body.email,
-				name: req.body.name,
+				fname: req.body.fname,
+				lname: req.body.lname,
+				gender: req.body.gender,
+				age: req.body.age,
 				phone: req.body.phone,
+				email: req.body.email,
 				department: req.body.department,
 				role: req.body.role,
 			},
