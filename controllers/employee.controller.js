@@ -49,6 +49,9 @@ exports.signUp = async (req, res) => {
 							password: hash,
 							department: req.body.department,
 							role: req.body.role,
+							payroll: req.body.payroll,
+							leave: req.body.leave,
+							qualification: req.body.qualification,
 						});
 						employee
 							.save()
@@ -155,6 +158,9 @@ exports.create = async (req, res) => {
 		phone: req.body.phone,
 		department: req.body.department,
 		role: req.body.role,
+		payroll: req.body.payroll,
+		leave: req.body.leave,
+		qualification: req.body.qualification,
 	});
 	employee
 		.save()
@@ -175,7 +181,7 @@ exports.create = async (req, res) => {
 // Getting All Employees
 exports.findAll = async (req, res) => {
 	Employee.find()
-		.select('_id email password name phone department role')
+		.select('_id email password fname lname gender age phone department leave qualification')
 		.populate('department role', '_id name description role')
 		.exec()
 		.then((data) => {
@@ -198,7 +204,7 @@ exports.findOne = (req, res) => {
 	// if no employee
 	try {
 		Employee.findById({ _id: req.params.id })
-			.select('_id email password name phone department')
+			.select('_id email password fname lname gender age phone department leave qualification')
 			.then((employee) => {
 				if (!employee) {
 					return res.status(404).send({

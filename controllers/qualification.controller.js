@@ -1,4 +1,5 @@
 const Qualification = require('../models/qualification.model');
+const mongoose = require('mongoose');
 
 // Creating Qualifications
 exports.create = async (req, res) => {
@@ -9,7 +10,7 @@ exports.create = async (req, res) => {
 		});
 	}
 	const qualification = new Qualification({
-		leave_id: mongoose.Types.ObjectId(),
+		qualification_id: mongoose.Types.ObjectId(),
 		position: req.body.position,
 		requirements: req.body.requirements,
 		date_in: req.body.date_in,

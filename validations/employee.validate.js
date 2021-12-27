@@ -4,10 +4,16 @@ const authSignUp = Joi.object({
 	// _id: mongoose.Types.ObjectId(),
 	email: Joi.string().email().lowercase().required(),
 	password: Joi.string().min(6).required(),
-	name: Joi.string().required(),
+	fname: Joi.string().required(),
+	lname: Joi.string().required(),
+	gender: Joi.string().required(),
+	age: Joi.string().required(),
+	payroll: Joi.string().required(),
+	qualification: Joi.string().required(),
 	phone: Joi.string().required(),
 	department: Joi.string().required(),
 	role: Joi.string().required(),
+	leave: Joi.string().required(),
 });
 
 const authLogin = Joi.object({

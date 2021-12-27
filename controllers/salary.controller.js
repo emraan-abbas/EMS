@@ -1,4 +1,5 @@
 const Salary = require('../models/salary.model');
+const mongoose = require('mongoose');
 
 // Creating Salarys
 exports.create = async (req, res) => {
@@ -9,7 +10,7 @@ exports.create = async (req, res) => {
 		});
 	}
 	const salary = new Salary({
-		leave_id: mongoose.Types.ObjectId(),
+		salary_id: mongoose.Types.ObjectId(),
 		amount: req.body.amount,
 		annual: req.body.annual,
 		bonus: req.body.bonus,

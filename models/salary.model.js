@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const SalarySchema = mongoose.Schema(
 	{
-		_id: mongoose.Types.ObjectId,
+		salary_id: mongoose.Types.ObjectId,
 		amount: String,
 		anual: String,
 		bonus: String,

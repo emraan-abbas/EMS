@@ -12,6 +12,9 @@ const EmployeeSchema = mongoose.Schema(
 		password: String,
 		department: { type: mongoose.Types.ObjectId, ref: 'departments' }, // OLD ONES
 		role: { type: mongoose.Types.ObjectId, ref: 'roles' }, // OLD ONES
+		payrole: { type: mongoose.Types.ObjectId, ref: 'payrolls' },
+		leave: { type: mongoose.Types.ObjectId, ref: 'leaves' },
+		qualification: { type: mongoose.Types.ObjectId, ref: 'qualifications' },
 	},
 	{
 		timestamps: true,

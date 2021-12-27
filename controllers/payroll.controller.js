@@ -1,4 +1,5 @@
 const Payroll = require('../models/payroll.model');
+const mongoose = require('mongoose');
 
 // Creating Payrolls
 exports.create = async (req, res) => {
@@ -9,7 +10,7 @@ exports.create = async (req, res) => {
 		});
 	}
 	const payroll = new Payroll({
-		leave_id: mongoose.Types.ObjectId(),
+		payroll_id: mongoose.Types.ObjectId(),
 		date: req.body.date,
 		report: req.body.report,
 		total_amount: req.body.total_amount,

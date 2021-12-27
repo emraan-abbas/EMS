@@ -1,4 +1,5 @@
 const Leave = require('../models/leave.model');
+const mongoose = require('mongoose');
 
 // Creating Leaves
 exports.create = async (req, res) => {
