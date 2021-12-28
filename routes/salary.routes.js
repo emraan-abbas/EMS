@@ -7,5 +7,6 @@ const { authRole } = require('../middleware/roleCheck.middleware');
 
 router.post('/', salary.create);
 router.get('/', salary.findAll);
+router.get('/:id', salary.findOne);
 
 module.exports = router;

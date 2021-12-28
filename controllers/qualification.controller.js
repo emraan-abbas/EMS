@@ -14,6 +14,7 @@ exports.create = async (req, res) => {
 		position: req.body.position,
 		requirements: req.body.requirements,
 		date_in: req.body.date_in,
+		employeeId: req.body.employeeId,
 	});
 	qualification
 		.save()
@@ -28,6 +29,8 @@ exports.create = async (req, res) => {
 			});
 		});
 }; // Create Ends Here
+
+/* ---------- */
 
 // Getting All Qualifications
 exports.findAll = async (req, res) => {
@@ -44,3 +47,29 @@ exports.findAll = async (req, res) => {
 		});
 	}
 }; // Getting All Ends Here
+
+/* ---------- */
+
+// Getting a Single Qualification
+exports.findOne = (req, res) => {
+	// if no Qualification
+	try {
+		Qualification.find({ employeeId: req.params.id })
+			.select('_id position requirements date_in employeeId')
+			// .populate('employeeId', 'id')
+			.then((qualification) => {
+				if (!req.body) {
+					return res.status(404).send({
+						message: 'Write something bro !: ',
+					});
+				}
+				res.send(qualification);
+			});
+	} catch (error) {
+		res.status(500).send({
+			message: error.message || 'Error at Getting a Qualification !',
+		});
+	}
+}; // Getting a Single Ends Here
+
+/* ---------- */

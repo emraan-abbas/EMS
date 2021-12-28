@@ -1,4 +1,5 @@
 const Leave = require('../models/leave.model');
+const Employee = require('../models/employee.model');
 const mongoose = require('mongoose');
 
 // Creating Leave
@@ -58,9 +59,8 @@ exports.findAll = async (req, res) => {
 exports.findOne = (req, res) => {
 	// if no Leave
 	try {
-		Leave.findById({ _id: req.params.id })
-			.select('_id date reason employeeId')
-			.populate('employeeId', '_id email fname lname gender age phone department role')
+		Leave.find({ employeeId: req.params.id })
+			// .populate('leave', 'id date reason')
 			.then((leave) => {
 				if (!req.body) {
 					return res.status(404).send({

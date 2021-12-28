@@ -7,7 +7,7 @@ const QualificationSchema = mongoose.Schema(
 		position: String,
 		requirements: String,
 		date_in: String,
-		employee: { type: mongoose.Types.ObjectId, ref: 'employees' },
+		employeeId: { type: mongoose.Types.ObjectId, ref: 'employees' },
 	},
 	{
 		timestamps: true,

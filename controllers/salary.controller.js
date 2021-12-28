@@ -15,7 +15,7 @@ exports.create = async (req, res) => {
 		amount: req.body.amount,
 		annual: req.body.annual,
 		bonus: req.body.bonus,
-		payroll: req.body.payroll,
+		employeeId: req.body.employeeId,
 	});
 	salary
 		.save()
@@ -50,3 +50,27 @@ exports.findAll = async (req, res) => {
 			});
 		});
 }; // Getting All Ends Here
+
+// Getting a Single Salary
+exports.findOne = (req, res) => {
+	// if no Salary
+	try {
+		Salary.find({ employeeId: req.params.id })
+			.select('_id date reason employeeId')
+			// .populate('employeeId', 'id')
+			.then((salary) => {
+				if (!req.body) {
+					return res.status(404).send({
+						message: 'Write something bro !: ',
+					});
+				}
+				res.send(salary);
+			});
+	} catch (error) {
+		res.status(500).send({
+			message: error.message || 'Error at Getting a Salary !',
+		});
+	}
+}; // Getting a Single Ends Here
+
+/* ---------- */
