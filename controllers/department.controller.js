@@ -17,7 +17,7 @@ exports.create = async (req, res) => {
 		description: req.body.description,
 		salary_range: req.body.salary_range,
 		salary: req.body.salary,
-		payroll: req.body.payroll,
+		// payroll: req.body.payroll,
 	});
 	department
 		.save()

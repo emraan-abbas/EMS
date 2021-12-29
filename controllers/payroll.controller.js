@@ -64,10 +64,11 @@ exports.findOne = async (req, res) => {
 	try {
 		const payroll = await Payroll.find({ employeeId: req.params.id }) //, date:req.body.date
 			.select('_id date report total_amount employeeId salary')
-			.populate('salary');
+			.populate('salary', '_id salary_id amount bonus');
 
-		const leaves = await Leave.find({ employeeId: req.params.id });
-		// console.log(leaves);
+		const leaves = await Leave.find({ employeeId: req.params.id }).select(
+			'_id salary_id amount bonus date reason'
+		);
 		return res.send({ payrollDetails: payroll, leavesDetail: leaves });
 	} catch (error) {
 		res.status(500).send({
