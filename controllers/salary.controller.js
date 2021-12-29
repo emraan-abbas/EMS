@@ -56,7 +56,7 @@ exports.findOne = (req, res) => {
 	// if no Salary
 	try {
 		Salary.find({ employeeId: req.params.id })
-			.select('_id date reason employeeId')
+			.select('_id amount annual bonus employeeId')
 			// .populate('employeeId', 'id')
 			.then((salary) => {
 				if (!req.body) {

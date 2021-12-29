@@ -5,7 +5,7 @@ const SalarySchema = mongoose.Schema(
 	{
 		salary_id: mongoose.Types.ObjectId,
 		amount: String,
-		anual: String,
+		annual: String,
 		bonus: String,
 		employeeId: { type: mongoose.Types.ObjectId, ref: 'employees' },
 	},
