@@ -7,10 +7,8 @@ const PayrollSchema = mongoose.Schema(
 		date: String,
 		report: String,
 		total_amount: String,
-		employee: { type: mongoose.Types.ObjectId, ref: 'employees' },
-		department: { type: mongoose.Types.ObjectId, ref: 'departments' },
+		employeeId: { type: mongoose.Types.ObjectId, ref: 'employees' },
 		salary: { type: mongoose.Types.ObjectId, ref: 'salaries' },
-		leave: { type: mongoose.Types.ObjectId, ref: 'leaves' },
 	},
 	{
 		timestamps: true,

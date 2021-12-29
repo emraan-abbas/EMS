@@ -9,7 +9,6 @@ const DepartmentSchema = mongoose.Schema(
 		description: String,
 		salary_range: String,
 		salary: { type: mongoose.Types.ObjectId, ref: 'salaries' },
-		payroll: { type: mongoose.Types.ObjectId, ref: 'payrolls' },
 	},
 	{
 		timestamps: true,

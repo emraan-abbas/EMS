@@ -12,7 +12,6 @@ const EmployeeSchema = mongoose.Schema(
 		password: String,
 		department: { type: mongoose.Types.ObjectId, ref: 'departments' }, // OLD ONES
 		role: { type: mongoose.Types.ObjectId, ref: 'roles' }, // OLD ONES
-		leave: [{ type: mongoose.Types.ObjectId, ref: 'leaves' }],
 	},
 	{
 		timestamps: true,
